@@ -8,6 +8,37 @@ namespace InstagramScraper\Model;
  */
 class Story extends Media
 {
+    /**
+     * @var array
+     */
+    protected $tappableObjects = [];
+
+    /**
+     * @var string
+     */
+    protected $storyCtaUrl;
+
+
+    /**
+     * @return string
+     */
+    public function getStoryCtaUrl()
+    {
+        return $this->storyCtaUrl;
+    }
+
+
+    /**
+     * @param false $toJson
+     *
+     * @return array|false|string
+     */
+    public function getTappableObjects($toJson = false)
+    {
+        return $toJson ? json_encode($this->tappableObjects) : $this->tappableObjects;
+    }
+
+
     private $skip_prop = [
         'owner' => true,
     ];
@@ -25,6 +56,16 @@ class Story extends Media
         if (!empty($this->skip_prop[$prop])) {
             return;
         }
+
+        switch ($prop) {
+            case 'tappable_objects':
+                $this->tappableObjects = (array) $value;
+                break;
+            case 'story_cta_url':
+                $this->storyCtaUrl = (string) $value;
+                break;
+        }
+
         parent::initPropertiesCustom($value, $prop, $arr);
     }
 }
