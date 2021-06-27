@@ -133,6 +133,9 @@ class Comment extends AbstractModel
             case 'owner':
                 $this->owner = Account::create($value);
                 break;
+            case 'user':
+                $this->owner = Account::create($value);
+                break;
             case 'edge_threaded_comments':
                 if (isset($value['count'])) {
                     $this->childCommentsCount = (int) $value['count'];
