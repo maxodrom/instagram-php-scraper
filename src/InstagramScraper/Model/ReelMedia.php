@@ -79,6 +79,11 @@ class ReelMedia extends AbstractModel
     protected $likers = [];
 
     /**
+     * @var int
+     */
+    protected $mediaType;
+
+    /**
      * @return string
      */
     public function getId()
@@ -191,6 +196,14 @@ class ReelMedia extends AbstractModel
     }
 
     /**
+     * @return int
+     */
+    public function getMediaType()
+    {
+        return $this->mediaType;
+    }
+
+    /**
      * @param $value
      * @param $prop
      * @param $arr
@@ -261,9 +274,12 @@ class ReelMedia extends AbstractModel
             case 'likers':
                 if (is_array($arr[$prop])) {
                     foreach ($arr[$prop] as $accountData) {
-                        $this->likers[] = Account::create($value);
+                        $this->likers[] = Account::create($accountData);
                     }
                 }
+                break;
+            case 'media_type':
+                $this->mediaType = $value;
                 break;
         }
     }
