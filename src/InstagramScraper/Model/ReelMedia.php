@@ -14,6 +14,11 @@ class ReelMedia extends AbstractModel
     protected $id;
 
     /**
+     * @var int
+     */
+    protected $pk;
+
+    /**
      * @var string
      */
     protected $caption;
@@ -44,11 +49,49 @@ class ReelMedia extends AbstractModel
     protected $mentions;
 
     /**
+     * @var Comment[]
+     */
+    protected $previewComments = [];
+
+    /**
+     * @var Comment[]
+     */
+    protected $comments = [];
+
+    /**
+     * @var string
+     */
+    protected $commentsCount = 0;
+
+    /**
+     * @var int
+     */
+    protected $createdTime = 0;
+
+    /**
+     * @var int
+     */
+    protected $likesCount = 0;
+
+    /**
+     * @var Account[]
+     */
+    protected $likers = [];
+
+    /**
      * @return string
      */
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * @return int
+     */
+    public function getPk()
+    {
+        return $this->pk;
     }
 
     /**
@@ -100,6 +143,54 @@ class ReelMedia extends AbstractModel
     }
 
     /**
+     * @return Comment[]
+     */
+    public function getPreviewComments()
+    {
+        return $this->previewComments;
+    }
+
+    /**
+     * @return Comment[]
+     */
+    public function getComments()
+    {
+        return $this->comments;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCommentsCount()
+    {
+        return $this->commentsCount;
+    }
+
+    /**
+     * @return int
+     */
+    public function getCreatedTime()
+    {
+        return $this->createdTime;
+    }
+
+    /**
+     * @return int
+     */
+    public function getLikesCount()
+    {
+        return $this->likesCount;
+    }
+
+    /**
+     * @return Account[]
+     */
+    public function getLikers()
+    {
+        return $this->likers;
+    }
+
+    /**
      * @param $value
      * @param $prop
      * @param $arr
@@ -107,6 +198,9 @@ class ReelMedia extends AbstractModel
     protected function initPropertiesCustom($value, $prop, $arr)
     {
         switch ($prop) {
+            case 'pk':
+                $this->pk = (int)$value;
+                break;
             case 'id':
                 $this->id = $value;
                 break;
@@ -139,6 +233,36 @@ class ReelMedia extends AbstractModel
 
                     $this->image = $candidate['url'];
                     break;
+                }
+                break;
+            case 'preview_comments':
+                if (is_array($arr[$prop])) {
+                    foreach ($arr[$prop] as $commentData) {
+                        $this->previewComments[] = Comment::create($commentData);
+                    }
+                }
+                break;
+            case 'comments':
+                if (is_array($arr[$prop])) {
+                    foreach ($arr[$prop] as $commentData) {
+                        $this->comments[] = Comment::create($commentData);
+                    }
+                }
+                break;
+            case 'comment_count':
+                $this->commentsCount = (int)$arr[$prop];
+                break;
+            case 'taken_at':
+                $this->createdTime = $arr[$prop];
+                break;
+            case 'like_count':
+                $this->likesCount = $arr[$prop];
+                break;
+            case 'likers':
+                if (is_array($arr[$prop])) {
+                    foreach ($arr[$prop] as $accountData) {
+                        $this->likers[] = Account::create($value);
+                    }
                 }
                 break;
         }
